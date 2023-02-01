@@ -1,29 +1,28 @@
 set -ex
 
 VERSION=$TAG
-cd ${WORKSPACE}/DevOps_Project_1
+cd ${WORKSPACE}/project_1
 
-export AWS_PROFILE="euran_devops_project"
+export AWS_PROFILE="aws_cred"
 
 echo $AWS_PROFILE
 
 whoami
-aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin "044967670847.dkr.ecr.ap-south-1.amazonaws.com"
+aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin "731234385084.dkr.ecr.us-east-1.amazonaws.com"
 
-sudo docker build -t nginx-application .
+sudo docker build -t arctick1 .
 
-sudo docker tag nginx-application:latest 044967670847.dkr.ecr.ap-south-1.amazonaws.com/nginx-application:$VERSION
+sudo docker tag arctick1:latest 731234385084.dkr.ecr.us-east-1.amazonaws.com/arctick1:$VERSION
 
-sudo docker push 044967670847.dkr.ecr.ap-south-1.amazonaws.com/nginx-application:$VERSION
+sudo docker push 731234385084.dkr.ecr.us-east-1.amazonaws.com/arctick1:$VERSION
 
-DOCKER_IMAGE="044967670847.dkr.ecr.ap-south-1.amazonaws.com/nginx-application:$VERSION"
+DOCKER_IMAGE="731234385084.dkr.ecr.us-east-1.amazonaws.com/arctick1:$VERSION"
 
 sed -i "s@devops_image@$DOCKER_IMAGE@g" nginx_deployment.yaml
 
 cat nginx_deployment.yaml
 
-
-aws eks update-kubeconfig --name mycluster --region ap-south-1 --profile euran_devops_project
+aws eks update-kubeconfig --name mycluster --region us-east-1 --profile aws_cred
 
 kubectl apply -f nginx_deployment.yaml
 
